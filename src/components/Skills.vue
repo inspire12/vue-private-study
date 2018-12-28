@@ -10,8 +10,9 @@
         <div class="holder">
             <ul>
                <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
-              <li v-for="(data, index) in skills" v-bind:key="data" >
+              <li v-for="(data, index) in skills" v-bind:key="index+1" >
                      {{data.skill}}
+                     <i class >
                     </li>
                 </transition-group>
             </ul>
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import 'bootstrap/dist/css/bootstrap.css'
 export default {
     data() {
         return {
@@ -61,6 +63,7 @@ export default {
 
 <style scoped>
 @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+
     .alert-in-enter-active{
         animation: bounce-in .5s;
     }
