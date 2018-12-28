@@ -1,15 +1,19 @@
 <template>
     <div class="container">
         <form @submit.prevent="addSkill">
-            <input type="text" placeholder="Enter a skill you have.." v-model="skill"> 
-            <p>{{skill}} </p>
+            <input type="text" placeholder="Enter a skill you have.." v-model="skill" v-validate="'min:5'" name="skill"> 
+            <transition name="alert-in" enter-active-class="animated flipInX" leave-active-class="animated flipOutX">
+            <p class="alert" v-if="errors.has('skill')">{{ errors.first('skill') }}</p>
+            </transition>
             <input type="checkbox" id="checkbox" v-model="checked">
         </form>
         <div class="holder">
             <ul>
-                <li v-for="(data, index) in skills" :key="index">
-                    {{index}}. {{data.skill}}
-                </li>
+               <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
+              <li v-for="(data, index) in skills" v-bind:key="data" >
+                     {{data.skill}}
+                    </li>
+                </transition-group>
             </ul>
         </div>
 
@@ -41,15 +45,40 @@ export default {
     },
     methods : {
         addSkill(){
-            this.skills.push({skill: this.skill});
-            this.skill='';
-            console.log('The checkbox value is: '+this.checked);
+            this.$validator.validateAll().then((result) => {
+                if(result){
+                    this.skills.push({skill: this.skill});
+                    this.skill='';
+                    console.log('The checkbox value is: '+this.checked);
+                }else{  
+                    console.log('Not valid');
+                }
+            })
         }
     }
 }
 </script>
 
 <style scoped>
+@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+    .alert-in-enter-active{
+        animation: bounce-in .5s;
+    }
+    .alert-in-leave-active {
+        animation: bounce-in .5s reverse;
+    }
+    @keyframes bounce-in {
+        0%{
+            transform: scale(0); 
+        }
+        50%{
+            transform: scale(1.5);
+        }
+        100%{
+            transform: scale(1);
+        }
+    }
+
 input {
     width: calc(100%);
     border: 0;
@@ -96,6 +125,5 @@ input {
     box-shadow: 0px 0px 40px lightgray;
     background: white;
   }
-
 
 </style>
